@@ -1,0 +1,80 @@
+## assembly for 5x whole genomes
+
+#PBS -N assembly-boulboul
+#PBS -q iiser
+#PBS -l select=1:ncpus=40,pmem=128
+#PBS -V
+#PBS -l walltime=128:00:00
+#PBS -o assembly-boulboul.o
+#PBS -e assembly-boulboul.err
+#PBS -m abe
+#PBS -M architasharma@students.iisertirupati.ac.in
+
+ncores=`cat $PBS_NODEFILE|wc -l`
+
+export PATH=/home/architasharma/anaconda3/bin:$PATH
+
+source activate base
+
+cd /home/architasharma/UCE_Turdus_October/blackbirdwgs/
+
+megahit -1 ./1_trimmed/Turdus_boulboul/Turdus_boulboul_R1_paired.fq.gz -2 ./1_trimmed/Turdus_boulboul/Turdus_boulboul_R2_paired.fq.gz -o ./2_assembly/Turdus_boulboul_assembly
+
+## running trimmomatic
+
+#PBS -N trim-kinisii
+#PBS -q iiser
+#PBS -l select=1:ncpus=40,pmem=128
+#PBS -V
+#PBS -l walltime=128:00:00
+#PBS -o trim-kinisii.o
+#PBS -e trim-kinisii.err
+
+ncores=`cat $PBS_NODEFILE|wc -l`
+
+cd /home/architasharma/UCE_Turdus_October/blackbirdwgs/
+
+
+java -jar /home/architasharma/anaconda3/envs/phyluce-1.7.1/share/trimmomatic-0.39-1/trimmomatic.jar PE \
+-phred33 \
+-threads 40 \
+-trimlog Turdus_kinisii_trim.log \
+-summary Turdus_kinisii_summary.txt \
+./31007400206_Unkown_AHLVLYDSX7_653627e09a7d2236ef86e4dd/31007400206-TSKT-TUSIKI-T-i54-i77-NCGM-1836-Dr-Robin-Naman-Goyal_S89_L001_R1_001.fastq.gz \
+./31007400206_Unkown_AHLVLYDSX7_653627e09a7d2236ef86e4dd/31007400206-TSKT-TUSIKI-T-i54-i77-NCGM-1836-Dr-Robin-Naman-Goyal_S89_L001_R2_001.fastq.gz" \
+./1_trimmed/Turdus_boulboul/Turdus_kinisii_R1_paired.fq.gz \
+./1_trimmed/Turdus_boulboul/Turdus_kinisii_R1_unpaired.fq.gz \
+./1_trimmed/Turdus_boulboul/Turdus_kinisii_R2_paired.fq.gz \
+./1_trimmed/Turdus_boulboul/Turdus_kinisii_R2_unpaired.fq.gz \
+ILLUMINACLIP:/home/architasharma/anaconda3/envs/phyluce-1.7.1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36
+
+##assembly to UCE 
+
+#copy file from assembly folder to the folder which contains faToTwoBit, twoBitInfo, and twoBitToFa utilities
+
+cp /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/2_assembly/Turdus_simillimus__assembly/T_similimus5x.contigs.fa /home/architasharma/soft/
+
+./faToTwoBit T_similimus5x.contigs.fa T_simillimus5x.2bit
+./twoBitInfo T_simillimus5x.2bit stdout | sort -k2rn > T_simillimus5x.chrom.sizes
+
+#transfer .2bit and .sizes files into a separate species specific folder
+
+cp /home/architasharma/soft/T_simillimus5x.2bit /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/
+
+cp /home/architasharma/soft/T_simillimus5x.chrom.sizes /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/
+
+cp /home/architasharma/UCE_Turdus_October/blackbirdwgs/3_harvesting/uce-5k-probes.fasta /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/
+
+mv /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/T_simillimus5x.2bit /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/T_simillimus5x/
+
+mv /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/sizes.tab /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/T_simillimus5x/
+
+#Align the probes to the genomes
+
+phyluce_probe_run_multiple_lastzs_sqlite \
+    --db T_simillimus5x.sqlite \
+    --output T_simillimus5x-genome-lastz \
+    --scaffoldlist T_simillimus5x \
+    --genome-base-path ./ \
+    --probefile uce-5k-probes.fasta \
+    --cores 12
