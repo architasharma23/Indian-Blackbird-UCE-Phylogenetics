@@ -1,4 +1,5 @@
 ## assembly for 5x whole genomes
+## Species 1 - Turdus Boulboul
 
 #PBS -N assembly-boulboul
 #PBS -q iiser
@@ -52,9 +53,9 @@ ILLUMINACLIP:/home/architasharma/anaconda3/envs/phyluce-1.7.1/share/trimmomatic-
 
 #copy file from assembly folder to the folder which contains faToTwoBit, twoBitInfo, and twoBitToFa utilities
 
-cp /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/2_assembly/Turdus_simillimus__assembly/T_similimus5x.contigs.fa /home/architasharma/soft/
+cp /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/2_assembly/Turdus_simillimus5x_assembly/T_simillimus5x.contigs.fa /home/architasharma/soft/
 
-./faToTwoBit T_similimus5x.contigs.fa T_simillimus5x.2bit
+./faToTwoBit T_simillimus5x.contigs.fa T_simillimus5x.2bit
 ./twoBitInfo T_simillimus5x.2bit stdout | sort -k2rn > T_simillimus5x.chrom.sizes
 
 #transfer .2bit and .sizes files into a separate species specific folder
@@ -78,3 +79,30 @@ phyluce_probe_run_multiple_lastzs_sqlite \
     --genome-base-path ./ \
     --probefile uce-5k-probes.fasta \
     --cores 12
+
+phyluce_probe_run_multiple_lastzs_sqlite \
+    --db Turdus-whole-genome.sqlite \
+    --output Turdus-whole-genome-lastz \
+    --scaffoldlist T_boulboul T_kinisii \
+    --genome-base-path ./ \
+    --probefile uce-5k-probes.fasta \
+    --cores 12
+
+#Extracting FASTA sequence matching UCE loci from genome sequences
+
+phyluce_probe_slice_sequence_from_genomes \
+    --lastz Turdus-whole-genome-lastz \
+    --conf turdus-wg.conf \
+    --flank 500 \
+    --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
+    --output Turdus-whole-genome-fasta
+
+phyluce_probe_slice_sequence_from_genomes \
+    --lastz T_simillimus5x-genome-lastz \
+    --conf T_simillimus5x.conf \
+    --flank 500 \
+    --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
+    --output T_simillimus5x-genome-fasta
+
+## Running Phyluce for Tree
+Drop your last output files (e.g. T_simillimus5x-genome-fasta) in the contigs folder under spades assembly
