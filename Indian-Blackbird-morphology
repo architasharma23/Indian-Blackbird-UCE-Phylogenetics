@@ -1,0 +1,57 @@
+install.packages("corrr")
+library('corrr')
+install.packages("ggcorrplot")
+library(ggcorrplot)
+install.packages("FactoMineR")
+library("FactoMineR")
+library("tidyverse")
+bbdata <- read.csv("C:/Users/archi/Documents/Indian Blackbird/Morphology/IBB_3subsp_subset1.csv", header = T)
+pca_na_omit <- rm_na(pca)
+pca_prcomp <- prcomp(pca_na_omit[2:13])
+x.factor<-as.factor(pca_na_omit$Subspecies_me)
+library("ggbiplot")
+ggbiplot(pca_prcomp,
+         groups = x.factor, ellipse = TRUE, var.axes = F) +
+  scale_color_discrete(name = '') +
+  theme(legend.direction = 'horizontal', legend.position = 'top')
+
+devtools::install_github("vqv/ggbiplot")
+
+#DONT NEED
+bbdata$Subspecies_name <- as.numeric(as.factor(bbdata$Subspecies_name))
+bbdata.factor<-as.factor(bbdata$subspecies_name)
+bbdata_new <- bbdata[ , unlist(lapply(bbdata, is.numeric))]
+
+bbdataF=as.data.frame(bbdata)
+
+#PCA
+pca <- prcomp(bbdata[2:13],na.omit(d), center = TRUE, scale = TRUE)
+
+is.infinite(bbdata)
+
+
+
+library(dplyr)
+library(ggstatsplot)
+library("ggplot2")
+bbdata <- read.csv("C:/Users/archi/Documents/Indian Blackbird/Morphology/IBB_3subsp_subset1.csv", header = T)
+tail <- ggbetweenstats(data = bbdata, x = Subspecies_name, y = Tail, type = "robust", package = "ggsci",
+               palette = "default_jco", cex = 0.8) 
+ggsave(tail, filename = "figs/fig_tail.png", width = 7, height = 5, units="in", dpi = 300, device="png")
+
+
+#PCA
+install.packages("VIM")
+install.packages("naniar")
+install.packages("missMDA")
+install.packages("Amelia")
+install.packages("mice")
+install.packages("missForest")
+install.packages("FactoMineR")
+
+bbdata <- read.csv("C:/Users/archi/Documents/Indian Blackbird/Morphology/IBB_3subsp_subset1.csv", header = T)
+
+df <- as.data.frame(bbdata)
+con <- df(,2:13)
+library("missMDA")
+nb <- estim_ncpPCA(pca,method.cv = "Kfold", verbose = FALSE)
