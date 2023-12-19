@@ -73,17 +73,17 @@ mv /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/sizes.t
 #Align the probes to the genomes
 
 phyluce_probe_run_multiple_lastzs_sqlite \
-    --db T_simillimus5x.sqlite \
-    --output T_simillimus5x-genome-lastz \
-    --scaffoldlist T_simillimus5x \
+    --db T_simillimus30x.sqlite \
+    --output T_simillimus30x-genome-lastz \
+    --scaffoldlist T_simillimus30x \
     --genome-base-path ./ \
     --probefile uce-5k-probes.fasta \
     --cores 12
 
 phyluce_probe_run_multiple_lastzs_sqlite \
-    --db Turdus-whole-genome.sqlite \
-    --output Turdus-whole-genome-lastz \
-    --scaffoldlist T_boulboul T_kinisii \
+    --db T_simillimus30x.sqlite \
+    --output T_simillimus30x-genome-lastz \
+    --scaffoldlist T_simillimus30x \
     --genome-base-path ./ \
     --probefile uce-5k-probes.fasta \
     --cores 12
@@ -91,11 +91,11 @@ phyluce_probe_run_multiple_lastzs_sqlite \
 #Extracting FASTA sequence matching UCE loci from genome sequences
 
 phyluce_probe_slice_sequence_from_genomes \
-    --lastz Turdus-whole-genome-lastz \
-    --conf turdus-wg.conf \
+    --lastz T_simillimus30x-genome-lastz \
+    --conf T_simillimus30x.conf \
     --flank 500 \
     --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
-    --output Turdus-whole-genome-fasta
+    --output T_simillimus30x-genome-fasta
 
 phyluce_probe_slice_sequence_from_genomes \
     --lastz T_simillimus5x-genome-lastz \
@@ -106,3 +106,70 @@ phyluce_probe_slice_sequence_from_genomes \
 
 ## Running Phyluce for Tree
 Drop your last output files (e.g. T_simillimus5x-genome-fasta) in the contigs folder under spades assembly
+
+#Finding UCE loci
+phyluce_assembly_match_contigs_to_probes \
+    --contigs spades-assemblies/contigs \
+    --probes uce-5k-probes.fasta \
+    --output uce-5k-search-results
+
+#Start here on 12-12-2023 <EDIT TEXT BELOW>
+mkdir -p taxon-sets/taxon-set-12-12-23-ibb
+	
+phyluce_assembly_get_match_counts \
+    --locus-db uce-5k-search-results/probe.matches.sqlite \
+    --taxon-list-config taxon-set-12-12-23-ibb.conf \
+    --taxon-group 'all' \
+    --incomplete-matrix \
+    --output taxon-sets/taxon-set-12-12-23-ibb/taxon-set-12-12-23-ibb-taxa-incomplete.conf
+
+cd taxon-sets/taxon-set-12-12-23-ibb
+
+mkdir log
+
+phyluce_assembly_get_fastas_from_match_counts \
+    --contigs ../../spades-assemblies/contigs \
+    --locus-db ../../uce-5k-search-results/probe.matches.sqlite \
+    --match-count-output taxon-set-12-12-23-ibb-taxa-incomplete.conf \
+    --output taxon-set-12-12-23-ibb-taxa-incomplete.fasta \
+    --incomplete-matrix taxon-set-12-12-23-ibb-taxa-incomplete.incomplete \
+    --log-path log
+	
+phyluce_align_seqcap_align \
+    --input taxon-set-12-12-23-ibb-taxa-incomplete.fasta \
+    --output taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed \
+    --taxa 13 \
+    --aligner mafft \
+    --cores 12 \
+    --incomplete-matrix \
+    --log-path log
+	
+phyluce_align_get_align_summary_data \
+    --alignments taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed \
+    --cores 4 \
+    --log-path log
+	
+phyluce_align_remove_locus_name_from_files \
+    --alignments taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed \
+    --output taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed-clean \
+    --cores 4 \
+    --log-path log
+	
+phyluce_align_get_only_loci_with_min_taxa \
+    --alignments taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed-clean \
+    --taxa 13 \
+    --percent 0.75 \
+    --output taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed-clean-75p \
+    --cores 4 \
+    --log-path log
+	
+phyluce_align_concatenate_alignments \
+    --alignments taxon-set-12-12-23-ibb-mafft-nexus-edge-trimmed-clean-75p \
+    --output taxon-set-12-12-23-mafft-ibb-nexus-edge-trimmed-clean-75p-raxml \
+    --phylip \
+    --log-path log
+	
+#extra scripts
+phyluce_align_add_missing_data_designators --alignments mafft-nexus-edge-trimmed-clean-75p --output mafft-nexus-edge-trimmed-clean-75p_missing --match-count-output dataset1.conf --incomplete-matrix dataset1.incomplete --log-path logs --cores 12 --min-taxa 49 --verbatim --no-check-missing --log-path log
+
+phyluce_align_get_align_summary_data --alignments mafft-nexus-edge-trimmed-clean-75p_missing --cores 12 --log-path logs
