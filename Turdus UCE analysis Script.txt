@@ -134,6 +134,33 @@ phyluce_assembly_get_fastas_from_match_counts \
     --output taxon-set-12-12-23-ibb-taxa-incomplete.fasta \
     --incomplete-matrix taxon-set-12-12-23-ibb-taxa-incomplete.incomplete \
     --log-path log
+
+# explode the monolithic FASTA by taxon (you can also do by locus)
+phyluce_assembly_explode_get_fastas_file \
+    --input taxon-set-19-12-23-ibb-taxa-incomplete.fasta \
+    --output exploded-fastas \
+    --by-taxon
+
+# get summary stats on the FASTAS
+for i in exploded-fastas/*.fasta;
+do
+    phyluce_assembly_get_fasta_lengths --input $i --csv;
+done
+
+#result-obtained-my-dataset
+T-boulboul-B0271.unaligned.fasta,3280,2458978,749.6884146341464,4.0884705473933,301,1420,729.0,649
+T-simillimus-bourdilloni-B1385.unaligned.fasta,4539,2175959,479.39171623705664,1.8316069060709586,74,1291,478.0,5
+T-simillimus-bourdilloni-B74038.unaligned.fasta,4072,1658802,407.36787819253436,1.7736057681116855,57,1105,399.0,1
+T-simillimus-bourdilloni-NAB149124.unaligned.fasta,4215,2313753,548.9330960854093,1.9219612485029083,186,1525,547.0,5
+T-simillimus-kinisii-QK13SW01.unaligned.fasta,4120,3676753,892.4157766990292,3.462615101146908,205,1660,921.5,1717
+T-simillimus-kinnisii-QG11SS03.unaligned.fasta,4409,1960379,444.631208890905,1.779667974305568,62,1674,442.0,4
+T-simillimus-kinnisii-QG17SS01.unaligned.fasta,4456,1948818,437.34694793536806,1.7243043973254613,57,1067,434.0,4
+T-simillimus-nigropileus-AB4133.unaligned.fasta,4767,3340651,700.7868680511853,2.2066331356446454,60,1861,706.0,118
+T-simillimus-nigropileus-B0014.unaligned.fasta,4169,2200011,527.7071240105541,1.681540599008812,191,1708,525.0,5
+T-simillimus-nigropileus-B1344.unaligned.fasta,4767,3340651,700.7868680511853,2.2066331356446454,60,1861,706.0,118
+T-simillimus-simillimus-AB159105.unaligned.fasta,4509,2485428,551.2149035262808,1.6310853101388023,71,1146,549.0,9
+T-simillimus-simillimus-AB159149.unaligned.fasta,4861,5431869,1117.438592882123,0.8712056179596156,427,1774,1120.0,4721
+T-simillimus-simillimus-AB159171.unaligned.fasta,3824,2088272,546.0962343096235,2.0793808136874787,180,1376,537.0,10
 	
 phyluce_align_seqcap_align \
     --input taxon-set-12-12-23-ibb-taxa-incomplete.fasta \
