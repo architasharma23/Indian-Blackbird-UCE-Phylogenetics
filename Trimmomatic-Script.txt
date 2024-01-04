@@ -40,3 +40,7 @@ mv *.trim* clean-fastq
 for infile in *_1un.trim.fastq.gz; do base=$(basename ${infile} _1un.trim.fastq.gz); cat ${infile} ${base}_2un.trim.fastq.gz > ${base}_READ-singleton.fastq.gz; done
 
 for i in *1un.trim.fastq.gz; do b=${i%%1un.trim.fastq.gz} cat "$i" "$b"2un.trim.fastq.gz > "$b"READ-singleton.fastq.gz; done
+
+#script on HPC for trimming whole genomes (5x/7.5x)
+ILLUMINACLIP:/home/architasharma/anaconda3/envs/phyluce-1.7.1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 MINLEN:36
+
