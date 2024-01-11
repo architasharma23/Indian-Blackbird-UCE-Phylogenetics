@@ -10,6 +10,7 @@ for infile in *_1.fastq.gz; do base=$(basename ${infile} _1.fastq.gz); trimmomat
 
 for infile in *_1.fastq.gz; do base=$(basename ${infile} _1.fastq.gz); trimmomatic PE -threads 4 ${infile} ${base}_2.fastq.gz ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:True SLIDINGWINDOW:4:20 MINLEN:25; done
 
+trimmomatic PE -threads 4 T_fumigatus_GNM-Av.ex_7455_1.fastq.gz T_fumigatus_GNM-Av.ex_7455_2.fastq.gz T_fumigatus_GNM-Av.ex_7455_1.trim.fastq.gz T_fumigatus_GNM-Av.ex_7455_1un.trim.fastq.gz T_fumigatus_GNM-Av.ex_7455_2.trim.fastq.gz T_fumigatus_GNM-Av.ex_7455_2un.trim.fastq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:True SLIDINGWINDOW:4:20 MINLEN:25
 
 #since trimmed files are created in the same folder as raw reads, we move them to new folder (clean-fastq)
 
