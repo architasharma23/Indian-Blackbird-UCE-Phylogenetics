@@ -20,7 +20,7 @@ mv raw-fastq-renamed/*.trim* trim-fastq-slidingwindow-minlen
 
 #renaming unpaired reads to singleton
 for prefix in $(ls *_1un.trim.fastq.gz | sed 's/_1un.trim.fastq.gz//'); do cat "${prefix}_1un.trim.fastq.gz" "${prefix}_2un.trim.fastq.gz" > "${prefix}_READ-singleton.fastq.gz" gzip "${prefix}_READ-singleton.fastq.gz"; done
-
+rm *un.trim.fastq.gz
 
 #renaming paired reads as READ1 and READ2
 
