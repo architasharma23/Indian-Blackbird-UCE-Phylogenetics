@@ -34,4 +34,18 @@ for infile in *_2.trim.fastq.gz; do base=$(basename ${infile} _2.trim.fastq.gz);
 awk -F',' '{ gsub(/\r/, "", $1); gsub(/\r/, "", $2); gsub(/^ *| *$/, "", $1); gsub(/^ *| *$/, "", $2); system("mv \"" $1 "\" \"" $2 "\"") }' name-test.csv
 
 #put in species specific folders
-for infile in *_READ1.fastq.gz; do base=$(basename ${infile} _READ1.fastq.gz); mkdir ${base}; done
+# Get unique prefixes from the filenames
+prefixes=($(ls *_READ1.fastq.gz | sed 's/_READ1.fastq.gz//'))
+
+# Loop over each prefix
+for prefix in "${prefixes[@]}"; do
+  dir_name="${prefix}"
+
+  # Create directory if it doesn't exist
+  mkdir -p "${dir_name}"
+
+  # Move files into the directory
+  mv "${prefix}"_READ1.fastq.gz "${prefix}"_READ2.fastq.gz "${prefix}"_READ-singleton.fastq.gz "${dir_name}/"
+done
+
+
