@@ -1,6 +1,12 @@
 (base) [architasharma@masternode FastQC]$ ./fastqc -o ../QC-raw-fastq-renamed ../raw-fastq-renamed/*.trim.fastq.gz
 (base) [architasharma@masternode FastQC]$ ./fastqc -o ../QC-clean-fastq ../clean-fastq/*.fastq.gz
 
+phyluce_assembly_assemblo_spades \
+    --conf assembly-combined.conf \
+    --output spades-assemblies \
+    --cores 30
+
+
 
 ## assembly for 5x whole genomes
 ## Species 1 - Turdus Boulboul
