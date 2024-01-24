@@ -210,3 +210,6 @@ phyluce_align_concatenate_alignments \
 phyluce_align_add_missing_data_designators --alignments mafft-nexus-edge-trimmed-clean-75p --output mafft-nexus-edge-trimmed-clean-75p_missing --match-count-output dataset1.conf --incomplete-matrix dataset1.incomplete --log-path logs --cores 12 --min-taxa 49 --verbatim --no-check-missing --log-path log
 
 phyluce_align_get_align_summary_data --alignments mafft-nexus-edge-trimmed-clean-75p_missing --cores 12 --log-path logs
+
+##Running IQtree in commandprompt
+iqtree2 -s taxon-set-12-12-23-mafft-ibb-nexus-edge-trimmed-clean-75p-raxml.phylip -m TEST -alrt 1000 -bb 1000 -o T_boulboul_B0271
