@@ -17,6 +17,7 @@ trimmomatic PE -threads 4 T_fumigatus_GNM-Av.ex_7455_1.fastq.gz T_fumigatus_GNM-
 #since trimmed files are created in the same folder as raw reads, we move them to new folder (clean-fastq)
 
 mv raw-fastq-renamed/*.trim* trim-fastq-slidingwindow-minlen
+mv raw-fastq-ibb/raw-fastq-wgs/*.trim* trim-fastq-ibb-wgs-slidingwindow-minlen
 
 #renaming unpaired reads to singleton
 for prefix in $(ls *_1un.trim.fastq.gz | sed 's/_1un.trim.fastq.gz//'); do cat "${prefix}_1un.trim.fastq.gz" "${prefix}_2un.trim.fastq.gz" > "${prefix}_READ-singleton.fastq.gz" gzip "${prefix}_READ-singleton.fastq.gz"; done
