@@ -49,4 +49,13 @@ for prefix in "${prefixes[@]}"; do
   mv "${prefix}"_READ1.fastq.gz "${prefix}"_READ2.fastq.gz "${prefix}"_READ-singleton.fastq.gz "${dir_name}/"
 done
 
+# Loop over each prefix
+for prefix in "${prefixes[@]}"; do
+  dir_name="${prefix}"
 
+  # Create directory if it doesn't exist
+  mkdir -p "${dir_name}"
+
+  # Move files into the directory
+  mv "${prefix}".2bit "${prefix}".chrom.sizes "${dir_name}/"
+done
