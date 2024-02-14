@@ -129,6 +129,9 @@ phyluce_probe_slice_sequence_from_genomes \
     --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
     --output T_simillimus_simillimus_AB159149-genome-fasta
 
+
+#ran above code on 14-02-2024
+
 ## Running Phyluce for Tree
 Drop your last output files (e.g. T_simillimus5x-genome-fasta) in the contigs folder under spades assembly
 
