@@ -83,17 +83,25 @@ mv /home/architasharma/UCE_Turdus_October/simillimus_wgs_5x/3_harvesting/sizes.t
 #Align the probes to the genomes
 
 phyluce_probe_run_multiple_lastzs_sqlite \
-    --db T_simillimus30x.sqlite \
-    --output T_simillimus30x-genome-lastz \
-    --scaffoldlist T_simillimus30x \
+    --db T_boulboul_B0271.sqlite \
+    --output T_boulboul_B0271-genome-lastz \
+    --scaffoldlist T_boulboul_B0271 \
     --genome-base-path ./ \
     --probefile uce-5k-probes.fasta \
     --cores 12
 
 phyluce_probe_run_multiple_lastzs_sqlite \
-    --db T_simillimus30x.sqlite \
-    --output T_simillimus30x-genome-lastz \
-    --scaffoldlist T_simillimus30x \
+    --db T_simillimus_kinnisii_QK13SW01.sqlite \
+    --output T_simillimus_kinnisii_QK13SW01-genome-lastz \
+    --scaffoldlist T_simillimus_kinnisii_QK13SW01 \
+    --genome-base-path ./ \
+    --probefile uce-5k-probes.fasta \
+    --cores 12
+
+phyluce_probe_run_multiple_lastzs_sqlite \
+    --db T_simillimus_simillimus_AB159149.sqlite \
+    --output T_simillimus_simillimus_AB159149-genome-lastz \
+    --scaffoldlist T_simillimus_simillimus_AB159149 \
     --genome-base-path ./ \
     --probefile uce-5k-probes.fasta \
     --cores 12
@@ -101,18 +109,25 @@ phyluce_probe_run_multiple_lastzs_sqlite \
 #Extracting FASTA sequence matching UCE loci from genome sequences
 
 phyluce_probe_slice_sequence_from_genomes \
-    --lastz T_simillimus30x-genome-lastz \
-    --conf T_simillimus30x.conf \
+    --lastz T_boulboul_B0271-genome-lastz \
+    --conf T_boulboul_B0271.conf \
     --flank 500 \
     --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
-    --output T_simillimus30x-genome-fasta
+    --output T_boulboul_B0271-genome-fasta
 
 phyluce_probe_slice_sequence_from_genomes \
-    --lastz T_simillimus5x-genome-lastz \
-    --conf T_simillimus5x.conf \
+    --lastz T_simillimus_kinnisii_QK13SW01-genome-lastz \
+    --conf T_simillimus_kinnisii_QK13SW01.conf \
     --flank 500 \
     --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
-    --output T_simillimus5x-genome-fasta
+    --output T_simillimus_kinnisii_QK13SW01-genome-fasta
+
+phyluce_probe_slice_sequence_from_genomes \
+    --lastz T_simillimus_simillimus_AB159149-genome-lastz \
+    --conf T_simillimus_simillimus_AB159149.conf \
+    --flank 500 \
+    --name-pattern "uce-5k-probes.fasta_v_{}.lastz.clean" \
+    --output T_simillimus_simillimus_AB159149-genome-fasta
 
 ## Running Phyluce for Tree
 Drop your last output files (e.g. T_simillimus5x-genome-fasta) in the contigs folder under spades assembly
