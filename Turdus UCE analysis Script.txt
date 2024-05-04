@@ -6,7 +6,7 @@ phyluce_assembly_assemblo_spades \
     --output spades-assemblies \
     --cores 30
 
-
+(base) eco-evo@DESKTOP-FRLEHGK:~/MEGAHIT-1.2.9-Linux-x86_64-static/bin$
 
 ## assembly for 5x whole genomes
 ## Species 1 - Turdus Boulboul
