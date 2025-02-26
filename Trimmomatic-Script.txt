@@ -1,3 +1,6 @@
+##Downloading SRA - https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/
+fasterq-dump --split-files SRR11180057
+
 Running Trimmomatic on SRA sequences/raw reads downloaded from NCBI SRA toolkit (SRR*_1.fastq.gz, SRR*_2.fastq.gz) - pipeline : UCE phylogenomics
 Note: Running Trimmomatic instead for illumiprocessor (Phyluce), and then joining back to Assembly step
 
